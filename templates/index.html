@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Online Writing App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      var typingTimer;
+      var doneTypingInterval = 2000;
+
+      $(document).ready(function() {
+        var textArea = $('#text');
+
+        textArea.on('input', function() {
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(submitText, doneTypingInterval);
+        });
+
+        textArea.on('keydown', function() {
+          clearTimeout(typingTimer);
+        });
+      });
+
+      function submitText() {
+        var text = $('#text').val();
+        if (text.trim() === '') {
+          $('#result').text('Your work has disappeared!');
+        } else {
+          $.post('/submit', { text: text }, function(response) {
+            if (response === 'empty') {
+              $('#result').text('Your work has disappeared!');
+            } else {
+              $('#result').text('Your work: ' + response);
+            }
+          });
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Online Writing App</h1>
+    <textarea id="text" rows="10" cols="50"></textarea>
+    <div id="result"></div>
+  </body>
+</html>
