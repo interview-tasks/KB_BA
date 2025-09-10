@@ -1,104 +1,51 @@
-# Disappearing_Text_Writing_App
-An online writing app where if you stop typing, your work will disappear.
-To build an online writing app where the work disappears if the user stops typing, you can use Python along with a web framework like Flask and JavaScript to handle the client-side functionality. Here's a step-by-step guide to get you started:
+# Business Metrics Reference Table
 
-1. Set up the project:
-   - Install Flask by running `pip install flask` in your command prompt or terminal.
-   - Create a new directory for your project.
-   - Inside the project directory, create a virtual environment by running `python -m venv venv`.
-   - Activate the virtual environment:
-     - On Windows: `venv\Scripts\activate`
-     - On macOS/Linux: `source venv/bin/activate`
-   - Create a new file called `app.py` in your project directory.
+| # | Metric | Definition & Formula | Worked Example | Data Required | Common Pitfalls | Recommended Actions |
+|---|--------|---------------------|----------------|---------------|-----------------|-------------------|
+| 1 | **Average Order Value (AOV)** | Average revenue per transaction<br>`AOV = Total Revenue / Number of Orders` | $120,000 ÷ 2,400 = $50.00 | Revenue by order (order-level) | Mean is skewed by very large orders; consider median or trimmed mean | Use minimum free-shipping thresholds, bundles, cross-sell |
+| 2 | **Average Revenue per User (ARPU)** | Average revenue per customer in a period<br>`ARPU = Total Revenue / Number of Customers` | $120,000 ÷ 1,200 = $100/year ($8.33/month) | Customer-level revenue attribution | Mixes paying and non-paying users if includes inactive accounts | Segment ARPU by channel or cohort to guide acquisition spend |
+| 3 | **Average Revenue Per Paying User (ARPPU)** | ARPU calculated only for paying users<br>`ARPPU = Revenue from paying users / Number of paying users` | $120,000 ÷ 600 = $200/year | Flag for paying users, revenue mapping | Changing the paying definition affects comparability | Increase conversion of free → paid or expand add-ons |
+| 4 | **Customer Acquisition Cost (CAC)** | Average cost to acquire a customer<br>`CAC = Total S&M Spend / New Customers` | $30,000 ÷ 300 = $100 | Marketing and sales spend attribution, new customer count by channel | Attributing long-term brand spend; including inappropriate costs | Reallocate budget off high CAC/low LTV channels; optimize conversion rates |
+| 5 | **Customer Lifetime Value (CLV/LTV)** | Present/expected gross contribution over lifetime<br>`CLV = (AOV × Frequency × Lifetime × Margin)` | $50 × 2 × 3 × 0.6 = $180 | Cohort purchase behavior, margins, churn estimates | Ignoring margins or retention decay; not discounting cashflows | Use CLV to cap CAC and segment acquisition budgets |
+| 6 | **LTV:CAC Ratio** | Ratio of customer value vs acquisition cost<br>`LTV:CAC = CLV / CAC` | $180 ÷ $100 = 1.8:1 (Target: 3:1) | Accurate CLV and CAC | Mismatched windows (CLV lifetime vs CAC monthly) | Increase LTV or reduce CAC; modify growth strategy accordingly |
+| 7 | **CAC Payback Period** | Months to recoup CAC from gross margins<br>`Payback = CAC / (ARPU per month × gross margin)` | $100 ÷ ($8.33 × 0.6) = 20 months | Monthly ARPU and margin | Ignoring gross margin inflates how quick payback seems | Improve onboarding to raise ARPU, reduce CAC, or increase margin |
+| 8 | **Monthly Customer Churn Rate** | Percentage of customers lost per month<br>`Churn = Customers lost / Customers at start` | 50 ÷ 1,000 = 5%/month | Customer lifecycle events; MRR ledger | Mixing active vs paying definitions; not splitting voluntary vs involuntary | Address top reasons (billing, onboarding, product) |
+| 9 | **Net Revenue Retention (NRR)** | Revenue retention including expansion<br>`NRR = (Start MRR - Churned MRR + Expansion MRR) / Start MRR` | (10,000 - 400 + 700) ÷ 10,000 = 103% | MRR by customer, upgrades/downgrades, churn MRR | Not excluding expansion from new sales; inconsistent MRR definitions | If NRR >100% scale expansion; if <100% prioritize retention |
+| 10 | **Monthly Recurring Revenue (MRR)** | Sum of monthly subscription revenue<br>`ARR = MRR × 12` | MRR = $10,000 → ARR = $120,000 | Subscription billing data, pro-rations handled consistently | Mixing one-time revenue with recurring; not normalizing discounting | Track MRR growth drivers; tie compensation to net new ARR |
+| 11 | **Conversion Rate** | Ratio of conversions to visitors<br>`Conversion Rate = Conversions / Visitors` | 2,000 ÷ 50,000 = 4.00% | Visitor counts, conversion events | Incorrect deduplication of visitors; sessions vs users confusion | Run A/B tests for highest-leak stages |
+| 12 | **Repeat Purchase Rate (RPR)** | Customers with multiple purchases<br>`RPR = Customers with >1 purchase / Total customers` | 600 ÷ 1,200 = 50% repeat rate | Order-level customer IDs | Time-window choice dramatically affects repeat metrics | Implement lifecycle emails timed to typical inter-purchase interval |
+| 13 | **Average Order Frequency** | Number of orders per customer per period<br>`Frequency = Total orders / Unique customers` | 2,400 ÷ 1,200 = 2 purchases/year (182.5 days between) | Timestamps of orders by customer | Heavy-tailed distributions; median may be more informative | Time remarketing before median inter-purchase |
+| 14 | **Return on Ad Spend (ROAS)** | Revenue generated per ad dollar<br>`ROAS = Revenue from campaign / Ad spend`<br>`True ROAS = Gross profit / Ad spend` | $60,000 ÷ $20,000 = 3.0<br>True ROAS: $36,000 ÷ $20,000 = 1.8 | Campaign attribution, revenue, margin or COGS | Over-crediting channels (attribution), ignoring returns/refunds | Move spend to channels with positive true ROAS |
+| 15 | **Return on Investment (ROI)** | Profitability of investment<br>`ROI = (Gain - Cost) / Cost` | ($60,000 - $20,000) ÷ $20,000 = 200% | Accurate measure of gains and invested costs | Using revenue instead of profit as "gain" | Use ROI for prioritization but account for strategic value |
+| 16 | **Gross Margin** | Profitability after direct costs<br>`Gross Margin % = (Revenue - COGS) / Revenue` | $120,000 × 0.6 = $72,000 gross profit<br>Per-customer: $100 × 0.6 = $60 | COGS per SKU or per service | Overallocating fixed overhead to COGS by mistake | Price or product mix changes to improve margin |
+| 17 | **Net Promoter Score (NPS)** | Customer loyalty measure<br>`NPS = %Promoters (9-10) - %Detractors (0-6)` | 60% promoters - 10% detractors = 50 NPS | Survey responses sampled representatively | Small or biased survey sample; mixing transactional and relationship NPS | Track NPS by cohort and remediate recurring detractor themes |
+| 18 | **DAU/MAU Stickiness** | Daily engagement ratio<br>`Stickiness = DAU / MAU` | 4,000 ÷ 15,000 = 26.67% | Unique active user counts by period | Counting bots, duplicate user IDs | Improve retention loops; increase daily value |
+| 19 | **Activation Rate** | Users achieving value event<br>`Activation = Users achieving value event / Signups` | 1,250 ÷ 5,000 = 25% | Event-level logs for onboarding events | Vague activation definition; mixing events across product modes | Redesign onboarding to shorten TTFV and increase activation |
+| 20 | **Magic Number** | SaaS sales efficiency<br>`Magic Number = (Current Q ARR - Prior Q ARR) × 4 / Prior Q S&M expense` | ($30,000 × 4) ÷ $40,000 = 3.0 | Quarterly ARR growth and S&M expense | Lumpy quarter-to-quarter ARR may distort; uses ARR not cash | If >>1, may under-invest in S&M; if <<0.5, inefficient |
+| 21 | **Burn Multiple** | Capital efficiency measure<br>`Burn Multiple = Net cash burned / Net new ARR` | $120,000 ÷ $40,000 = 3.0 | Cash flow and revenue growth | Ignoring seasonality, one-time items | Aim for lower burn multiple to be capital efficient |
+| 22 | **Take Rate** | Platform revenue percentage<br>`Take Rate = Platform revenue / GMV` | $50,000 ÷ $500,000 = 10% | Transaction records showing gross value and fees | Including refunds or cancellations incorrectly | Optimize take rate and incentives to balance seller/consumer economics |
+| 23 | **Inventory Turnover** | Inventory efficiency<br>`Turnover = COGS / Average Inventory`<br>`Days = 365 / Turnover` | $48,000 ÷ $8,000 = 6 turns<br>365 ÷ 6 = 61 days | COGS and inventory levels | Wrongly classifying inventory (consumables, WIP) | Adjust ordering cadence, promotions to reduce days |
+| 24 | **Days Sales Outstanding (DSO)** | Receivables collection efficiency<br>`DSO = (Receivables / Revenue) × Days in period` | ($20,000 ÷ $120,000) × 365 = 61 days | A/R ledger, recognized revenue | Mixing cash and accrual periods | Tighten credit, incentives for early payment |
+| 25 | **Churn-to-Acquisition Ratio** | Churn vs new customer comparison<br>`Ratio = Churned customers / New customers` | 50 ÷ 300 = 16.67% | Customer cohorts by acquisition date, churn events | Counting reactivated customers incorrectly | If churn > new acquisitions, focus on retention before scaling |
+| 26 | **Sales Win Rate** | Deal conversion efficiency<br>`Win Rate = Deals won / Deals qualified` | 50 ÷ 200 = 25% | CRM opportunity stage data with timestamps and values | Inconsistent qualification; stale opps inflate pipeline | Improve qualification and shorten cycles |
+| 27 | **Cost Per Lead (CPL)** | Lead generation efficiency<br>`CPL = Marketing spend / Leads` | $30,000 ÷ 3,000 = $10 CPL | Lead records and attributed spend | Mismatched attribution windows | Reallocate budget to high lead-to-customer sources |
+| 28 | **Feature Adoption Rate** | Product feature usage<br>`Adoption = Adopters / Eligible users` | 3,000 ÷ 15,000 = 20% | Event logs, user eligibility mapping | Confounding (power users more likely to adopt) | Run experiments to measure causal lift (A/B or uplift modeling) |
+| 29 | **Uplift/Incrementality** | True campaign effectiveness<br>`Incremental = Treatment conversions - Control conversions` | 1,000 - 700 = 300 incremental purchases | Randomized holdouts or propensity-score matched controls | Selection bias, seasonality | Only count incremental when measuring ROAS |
+| 30 | **Forecasting Accuracy (MAPE)** | Prediction accuracy measure<br>`MAPE = mean(|(Actual - Forecast)/Actual|)` | Errors: [10%, 4.17%] → MAPE = 7.08% | Historic forecasts and actuals | Division by zero for small actuals; biased evaluation | Improve modeling or recalibrate confidence intervals |
+| 31 | **Customer Health Score** | Composite customer risk measure<br>`Health = Weighted index of engagement, recency, support, payment` | 0.4×usage + 0.3×recency + 0.2×payment + 0.1×support | Events, payments, support logs | Overfitting weights; poor normalization | Use for prioritizing CSM outreach |
+| 32 | **Contribution per SKU** | Product-level profitability<br>`Contribution = Selling price - COGS` | $50 selling price - $20 COGS = $30 contribution | BOM, procurement, direct labor | Allocating shared costs incorrectly | Focus on high-contribution SKUs |
+| 33 | **EBITDA Margin** | Operating profitability<br>`EBITDA Margin = EBITDA / Revenue` | $20,000 ÷ $120,000 = 16.67% | Income statement | Non-recurring items skew margin | Improve cost structure to raise margins |
+| 34 | **Return on Capital Employed (ROCE)** | Capital efficiency<br>`ROCE = EBIT / Capital Employed` | $25,000 ÷ $100,000 = 25% | Balance sheet and P&L | Capital employed definition varies | Assess capital allocation efficiency |
+| 35 | **Cohort Channel LTV** | Channel-specific customer value<br>`Compute LTV by acquisition channel from cohorts` | Month-by-month cumulative revenue per customer by channel | Acquisition channel per customer, revenue, margin | Inconsistent cohort definitions | Use to optimize channel spend allocation |
 
-2. Import the required modules:
-   - Open `app.py` and add the following import statements:
+## Key Benchmarks & Targets
 
-   ```python
-   from flask import Flask, render_template, request
-   import os
-   ```
-
-3. Initialize the Flask application:
-   - Add the following code to `app.py`:
-
-   ```python
-   app = Flask(__name__)
-   app.config['SECRET_KEY'] = os.urandom(24)
-   ```
-
-4. Create routes for displaying the app and handling the text submission:
-   - Add the following code to `app.py`:
-
-   ```python
-   @app.route('/')
-   def index():
-       return render_template('index.html')
-
-   @app.route('/submit', methods=['POST'])
-   def submit():
-       text = request.form['text']
-       if text:
-           return text
-       else:
-           return 'empty'
-   ```
-
-5. Create the HTML template:
-   - Create a new directory called `templates` inside your project directory.
-   - Inside the `templates` directory, create a new file called `index.html`.
-   - Add the following code to `index.html`:
-
-   ```html
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <title>Online Writing App</title>
-       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-       <script>
-         var typingTimer;
-         var doneTypingInterval = 2000;
-
-         $(document).ready(function() {
-           var textArea = $('#text');
-
-           textArea.on('input', function() {
-             clearTimeout(typingTimer);
-             typingTimer = setTimeout(submitText, doneTypingInterval);
-           });
-
-           textArea.on('keydown', function() {
-             clearTimeout(typingTimer);
-           });
-         });
-
-         function submitText() {
-           var text = $('#text').val();
-           if (text.trim() === '') {
-             $('#result').text('Your work has disappeared!');
-           } else {
-             $.post('/submit', { text: text }, function(response) {
-               if (response === 'empty') {
-                 $('#result').text('Your work has disappeared!');
-               } else {
-                 $('#result').text('Your work: ' + response);
-               }
-             });
-           }
-         }
-       </script>
-     </head>
-     <body>
-       <h1>Online Writing App</h1>
-       <textarea id="text" rows="10" cols="50"></textarea>
-       <div id="result"></div>
-     </body>
-   </html>
-   ```
-
-6. Run the application:
-   - In your command prompt or terminal, navigate to your project directory.
-   - Run `flask run` to start the Flask development server.
-   - Open your web browser and visit `http://localhost:5000` to use the online writing app.
-
-In this app, the JavaScript code captures the user's input in the textarea and waits for a specific interval of time (2
+| Metric | Good | Acceptable | Poor |
+|--------|------|------------|------|
+| **LTV:CAC Ratio** | 3:1+ | 1.5-3:1 | <1.5:1 |
+| **CAC Payback** | <12 months | 12-18 months | >18 months |
+| **NRR** | >110% | 100-110% | <100% |
+| **Monthly Churn** | <5% | 5-10% | >10% |
+| **Magic Number** | >1.0 | 0.5-1.0 | <0.5 |
+| **NPS** | >50 | 0-50 | <0 |
+| **Gross Margin** | >70% | 50-70% | <50% |
